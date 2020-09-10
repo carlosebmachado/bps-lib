@@ -1,0 +1,44 @@
+# It's a comment
+
+# It's a section
+<section>
+	# It's the name of the section
+	<name>sectionName</>
+
+	# These are basic text key-value's
+	<data>str:"This is a string"</>
+	<data>char:'z'</>
+
+	# These are basic numeric key-value's
+	<data>int:10</>
+	<data>float:0.5</>
+	<data>boolt:true</>
+	<data>boolf:false</>
+
+	# It's is a vector
+	<data>vector:['a','b','c']</>
+
+	# It's is a matrix
+	<data>matrix:[[0,0,0],
+				  [0,0,0],
+				  [0,0,0]]</>
+</>
+
+# It's another section
+<section>
+	# This section doesn't has a name,
+	# and it name will be itself index
+
+	# It's a basic key-value
+	<data>key:"value"</>
+	# It's using camelCase
+	<data>keyTwo:"value"</>
+	# It's using undescore
+	<data>key_two:"value"</>
+</>
+
+<section>
+	<name>one more</>
+	# This section doesn't has data
+	# It doesn't be a problem
+</>

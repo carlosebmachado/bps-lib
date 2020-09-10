@@ -1,0 +1,56 @@
+%YAML 1.2
+---
+name: BPS
+file_extensions: [bps]
+scope: source.bps
+contexts:
+  main:
+    # keywords
+    - match: "<"
+      scope: punctuation.definition.tag.begin
+    - match: ">"
+      scope: punctuation.definition.tag.end
+    - match: "/>"
+      scope: punctuation.definition.tag.end
+    - match: \b(section|name|data)\b
+      scope: keyword.control.include.bps
+
+    # vars
+    - match: '[A-Za-z_][A-Za-z_0-9]+:'
+      scope: entity.name.type
+
+    # comments
+    - match: '#'
+      scope: punctuation.definition.comment.bps
+      push: line_comment
+
+    # boolean
+    - match: \b(true|false)\b
+      scope: keyword.control.include.bps
+
+    # numbers
+    - match: '[.0-9]'
+      scope: constant.numeric.bps
+
+    # chars
+    - match: '(")[ _.0-9a-zA-Z]+(")'
+      scope: string.quoted.double.bps
+    - match: "(\\').(\\')"
+      scope: string.quoted.double.bps
+
+    # strings
+    - match: '"'
+      push: string
+
+
+  line_comment:
+  - meta_scope: comment.line.bps
+  - match: $
+    pop: true
+
+  string:
+    - meta_scope: string.quoted.double.bps
+    - match: \\.
+      scope: constant.character.escape.bps
+    - match: '"'
+      pop: true

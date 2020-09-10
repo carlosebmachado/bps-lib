@@ -1,0 +1,50 @@
+# It's a comment
+
+# It's a section
+<section>
+	# It's the name of the section
+	# Name's always a string
+	<name>"sectionName"</>
+
+	# These are basic text key-value's
+	<data>string:"This is a string"</>
+	<data>char:'z'</>
+
+	# These are basic numeric key-value's
+	<data>int:10</>
+	<data>float:0.5</>
+	<data>boolt:true</>
+	<data>boolf:false</>
+
+	# It's is a vector (one dimension array)
+	<data>charVector:['a', 'b', 'c']</>
+	# With other kind of data
+	<data>boolVector:[true, false, true]</>
+	<data>intVector:[0, 1, 2, 10, -5]</>
+	<data>floatVector:[0.9, 1.7, 0.2, 1.06, -5.618]</>
+	<data>stringVector:["yes", "no", "maybe"]</>
+</>
+
+
+# It's another section
+<section>
+	# This section doesn't has a name,
+	# and it name will be itself index
+
+	# ATTENTION!
+	# If has name, data always should
+	# be put after it
+	
+	# It's a basic key-value
+	<data>key:"value"</>
+	# It's using camelCase
+	<data>keyTwo:"value"</>
+	# It's using undescore
+	<data>key_two:"value"</>
+</>
+
+<section>
+	<name>"one more"</>
+	# This section doesn't has data
+	# It doesn't be a problem
+</>

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace BPS.Util.Test
 {
@@ -19,8 +18,6 @@ namespace BPS.Util.Test
             if (!DEBUG) return;
 #pragma warning restore CS0162 // Código inacessível detectado
 
-            Cryptography_Test();
-
             //ReadWrite_Test();
             //RemoveData_Test();
             //RemoveSection_Test();
@@ -29,21 +26,6 @@ namespace BPS.Util.Test
 
             //Console.Read();
             //System.Threading.Thread.Sleep(60 * 1000);
-        }
-
-#pragma warning disable IDE0051 // Remover membros privados não utilizados
-        private static void Cryptography_Test()
-#pragma warning restore IDE0051 // Remover membros privados não utilizados
-        {
-            byte[] key = Encoding.UTF8.GetBytes("0123456789ABCDEF");
-            string text = "It's a test string.";
-            string enc;
-            string dec;
-            Cryptography cryptography = new Cryptography(key);
-            enc = cryptography.Encrypt(text);
-            dec = cryptography.Decrypt(enc);
-
-            Console.WriteLine("Original: " + text + "\nEncrypted: " + enc + "\nDecrypted: " + dec);
         }
 
 #pragma warning disable IDE0051 // Remover membros privados não utilizados

@@ -2,8 +2,8 @@
 #include "BPS.hpp"
 
 
-//std::string path = "D:/Documentos/OneDrive/DESKTOP/MLang/bps-lib/";
-std::string path = "C:/Users/Panificadora Larissa/OneDrive/DESKTOP/MLang/bps-lib/";
+std::string path = "D:/Documentos/OneDrive/DESKTOP/MLang/bps-lib/";
+//std::string path = "C:/Users/Panificadora Larissa/OneDrive/DESKTOP/MLang/bps-lib/";
 std::string wf = "write_test";
 std::string rf = "read_test.bps";
 

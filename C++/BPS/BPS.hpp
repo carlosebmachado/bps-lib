@@ -153,34 +153,34 @@ namespace BPS
     void write(File*, std::string);
 
     // token
-    bool IsToken(std::string);
-    bool IsOToken(std::string);
-    bool IsCToken(std::string);
+    bool isToken(std::string);
+    bool isOpenToken(std::string);
+    bool isCloseToken(std::string);
 
     // parser
-    std::vector<std::string> Lexer(std::string);
+    std::vector<std::string> lexer(std::string);
 
-    bool IsString(std::string);
-    bool IsChar(std::string);
-    bool IsBool(std::string);
-    bool IsNumeric(std::string);
-    bool IsInt(std::string);
-    bool IsDouble(std::string);
-    bool IsArray(std::string);
+    bool isString(std::string);
+    bool isChar(std::string);
+    bool isBool(std::string);
+    bool isNumeric(std::string);
+    bool isInt(std::string);
+    bool isDouble(std::string);
+    bool isArray(std::string);
 
-    std::string ParseString(std::string);
-    char ParseChar(std::string);
-    bool ParseBool(std::string);
-    int ParseInt(std::string);
-    double ParseDouble(std::string);
+    std::string parseString(std::string);
+    char parseChar(std::string);
+    bool parseBool(std::string);
+    int parseInt(std::string);
+    double parseDouble(std::string);
     template <typename T>
-    Data* ParseData(std::string, std::string);
-
-    template <typename T>
-    std::vector<Section*> Parser(std::vector<std::string>);
+    Data* parseData(std::string, std::string);
 
     template <typename T>
-    File* Compile(std::string);
+    std::vector<Section*> parser(std::vector<std::string>);
+
+    template <typename T>
+    File* compile(std::string);
 }
 
 #endif // BPS_H

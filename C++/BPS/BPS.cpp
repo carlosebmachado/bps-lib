@@ -54,7 +54,7 @@ namespace BPS
 
     const char* FILENAME_EXTENSION = ".bps";
 
-    const char* Tokens[4] =
+    const char* TOKENS[4] =
     {
         TK_SECTION,
         TK_DATA,
@@ -62,14 +62,14 @@ namespace BPS
         TK_CLOSE
     };
 
-    const char* OTokens[3] =
+    const char* OPEN_TOKENS[3] =
     {
         TK_SECTION,
         TK_DATA,
         TK_NAME
     };
 
-    const char* CTokens[1] =
+    const char* CLOSE_TOKENS[1] =
     {
         TK_CLOSE
     };
@@ -250,9 +250,9 @@ namespace BPS
 
     bool Section::remove(std::string key)
     {
-        for (auto i = 0; i < data.size(); i++)
+        for (size_t i = 0; i < data.size(); i++)
         {
-            if (data[i]->getKey()._Equal(key))
+            if (data[i]->getKey() == key)
             {
                 data.erase(data.begin() + i);
                 return true;
@@ -270,7 +270,7 @@ namespace BPS
     {
         for (auto d : data)
         {
-            if (d->getKey()._Equal(key))
+            if (d->getKey() == key)
             {
                 return d;
             }
@@ -325,9 +325,9 @@ namespace BPS
 
     bool File::remove(std::string key)
     {
-        for (auto i = 0; i < sections.size(); i++)
+        for (size_t i = 0; i < sections.size(); i++)
         {
-            if (sections[i]->getName()._Equal(key))
+            if (sections[i]->getName() == key)
             {
                 sections.erase(sections.begin() + i);
                 return true;
@@ -345,7 +345,7 @@ namespace BPS
     {
         for (auto s : sections)
         {
-            if (s->getName()._Equal(name))
+            if (s->getName() == name)
             {
                 return s;
             }
@@ -363,7 +363,7 @@ namespace BPS
         auto length = path.size();
         if (length > 4)
         {
-            if (!path.substr(length - 4, 4)._Equal(FILENAME_EXTENSION))
+            if (path.substr(length - 4, 4) != FILENAME_EXTENSION)
             {
                 return path + FILENAME_EXTENSION;
             }
@@ -372,7 +372,7 @@ namespace BPS
                 return path;
             }
         }
-        else if (path._Equal(FILENAME_EXTENSION))
+        else if (path == FILENAME_EXTENSION)
         {
             return path;
         }
@@ -390,29 +390,44 @@ namespace BPS
     }
 
     // token
-    bool IsToken(std::string str)
+    bool isToken(std::string str)
     {
-        for (std::string token : Tokens)
-            if (token._Equal(str)) return true;
+        for (std::string token : TOKENS)
+        {
+            if (token == str)
+            {
+                return true;
+            }
+        }
         return false;
     }
 
-    bool IsOToken(std::string str)
+    bool isOpenToken(std::string str)
     {
-        for (std::string token : OTokens)
-            if (token._Equal(str)) return true;
+        for (std::string token : OPEN_TOKENS)
+        {
+            if (token == str)
+            {
+                return true;
+            }
+        }
         return false;
     }
 
-    bool IsCToken(std::string str)
+    bool isCloseToken(std::string str)
     {
-        for (std::string token : CTokens)
-            if (token._Equal(str)) return true;
+        for (std::string token : CLOSE_TOKENS)
+        {
+            if (token == str)
+            {
+                return true;
+            }
+        }
         return false;
     }
 
     // parser
-    std::vector<std::string> Lexer(std::string data)
+    std::vector<std::string> lexer(std::string data)
     {
         auto tokens = std::vector<std::string>();
 
@@ -423,25 +438,30 @@ namespace BPS
             {
                 cleanString += data[i];
                 i++;
-                while (data[i] != SY_DQUOTE &&
-                    data[i - 1] != SY_BAR_INV)
+                while (data[i] != SY_DQUOTE && data[i - 1] != SY_BAR_INV)
                 {
                     cleanString += data[i];
                     i++;
                 }
             }
             if (data[i] == SY_HASH)
-                while (data[i] != SY_NEWLINE) i++;
-            if (data[i] == SY_RETURN ||
-                data[i] == SY_NEWLINE ||
-                data[i] == SY_SPACE ||
-                data[i] == SY_TAB) continue;
+            {
+                while (data[i] != SY_NEWLINE)
+                {
+                    i++;
+                }
+            }
+            if (data[i] == SY_RETURN || data[i] == SY_NEWLINE ||
+                data[i] == SY_SPACE || data[i] == SY_TAB)
+            {
+                continue;
+            }
             cleanString += data[i];
         }
 
         std::string curWord = "";
         bool hasSomething = false;
-        for (int i = 0; i < cleanString.length(); i++)
+        for (size_t i = 0; i < cleanString.length(); i++)
         {
             if (cleanString[i] == SY_LESS && !hasSomething)
             {
@@ -456,19 +476,23 @@ namespace BPS
                     curWord = "";
                     continue;
                 }
-                if (cleanString[i] == SY_LESS &&
-                    cleanString[i + 1] == SY_BAR)
+                if (cleanString[i] == SY_LESS && cleanString[i + 1] == SY_BAR)
                 {
-                    if (!curWord._Equal("")) tokens.push_back(curWord);
+                    if (curWord != "")
+                    {
+                        tokens.push_back(curWord);
+                    }
                     curWord = std::string(1, cleanString[i]);
                     continue;
                 }
                 curWord += cleanString[i];
-                if (IsToken(curWord))
+                if (isToken(curWord))
                 {
                     tokens.push_back(curWord);
-                    if (!IsOToken(curWord))
+                    if (!isOpenToken(curWord))
+                    {
                         hasSomething = false;
+                    }
                     curWord = "";
                 }
             }
@@ -476,57 +500,68 @@ namespace BPS
         return tokens;
     }
 
-    bool IsString(std::string value)
+    bool isString(std::string value)
     {
         return value[0] == SY_DQUOTE;
     }
 
-    bool IsChar(std::string value)
+    bool isChar(std::string value)
     {
         return value[0] == SY_QUOTE && value.length() == 3;
     }
 
-    bool IsBool(std::string value)
+    bool isBool(std::string value)
     {
-        return value._Equal("true") || value._Equal("false");
+        return value == "true" || value == "false";
     }
 
-    bool IsNumeric(std::string value)
+    bool isNumeric(std::string value)
     {
         return isdigit(value[0]) || value[0] == SY_MINUS;
     }
 
-    bool IsInt(std::string value)
+    bool isInt(std::string value)
     {
-        if (IsNumeric(value)) {
+        if (isNumeric(value))
+        {
             for (char c : value)
+            {
                 if (c == SY_DOT)
+                {
                     return false;
+                }
+            }
             return true;
         }
         return false;
     }
 
-    bool IsDouble(std::string value)
+    bool isDouble(std::string value)
     {
-        if (IsNumeric(value))
+        if (isNumeric(value))
+        {
             for (char c : value)
+            {
                 if (c == SY_DOT)
+                {
                     return true;
+                }
+            }
+        }
         return false;
     }
 
-    bool IsArray(std::string value)
+    bool isArray(std::string value)
     {
         return value[0] == SY_OPEN_BRACKETS;
     }
 
-    std::string ParseString(std::string value)
+    std::string parseString(std::string value)
     {
         return value.substr(1, value.length() - 2);
     }
 
-    char ParseChar(std::string value)
+    char parseChar(std::string value)
     {
         std::string nv = value.substr(1, 1);
         const char* cvpc = nv.c_str();
@@ -535,57 +570,77 @@ namespace BPS
         return cv;
     }
 
-    bool ParseBool(std::string value)
+    bool parseBool(std::string value)
     {
-        return value._Equal("true");
+        return value == "true";
     }
 
-    int ParseInt(std::string value)
+    int parseInt(std::string value)
     {
         return atoi(value.c_str());
     }
 
-    double ParseDouble(std::string value)
+    double parseDouble(std::string value)
     {
         return atof(value.c_str());
     }
 
-    Data* ParseData(std::string key, std::string value)
+    Data* parseData(std::string key, std::string value)
     {
-        if (IsString(value))                                                                                    if (IsString(value))
-            return new StringData(key, ParseString(value));
-        if (IsChar(value))
-            return new CharData(key, ParseChar(value));
-        if (IsBool(value))
-            return new BoolData(key, ParseBool(value));
-        if (IsDouble(value))
-            return new DoubleData(key, ParseDouble(value));
-        if (IsInt(value))
-            return new IntData(key, ParseInt(value));
-        if (IsArray(value))
+        if (isString(value))
+        {
+            return new StringData(key, parseString(value));
+        }
+        if (isChar(value))
+        {
+            return new CharData(key, parseChar(value));
+        }
+        if (isBool(value))
+        {
+            return new BoolData(key, parseBool(value));
+        }
+        if (isDouble(value))
+        {
+            return new DoubleData(key, parseDouble(value));
+        }
+        if (isInt(value))
+        {
+            return new IntData(key, parseInt(value));
+        }
+        if (isArray(value))
         {
             auto data = std::vector<Data*>();
             value = value.substr(1, value.length() - 2);
             auto rawArr = split(value, SY_COMMA);
             for (auto ri : rawArr)
             {
-                if (IsString(ri))
-                    data.push_back(new StringData(key, ParseString(ri)));
-                if (IsChar(ri))
-                    data.push_back(new CharData(key, ParseChar(ri)));
-                if (IsBool(ri))
-                    data.push_back(new BoolData(key, ParseBool(ri)));
-                if (IsDouble(ri))
-                    data.push_back(new DoubleData(key, ParseDouble(ri)));
-                if (IsInt(ri))
-                    data.push_back(new IntData(key, ParseInt(ri)));
+                if (isString(ri))
+                {
+                    data.push_back(new StringData(key, parseString(ri)));
+                }
+                if (isChar(ri))
+                {
+                    data.push_back(new CharData(key, parseChar(ri)));
+                }
+                if (isBool(ri))
+                {
+                    data.push_back(new BoolData(key, parseBool(ri)));
+                }
+                if (isDouble(ri))
+                {
+                    data.push_back(new DoubleData(key, parseDouble(ri)));
+                }
+                if (isInt(ri))
+                {
+                    data.push_back(new IntData(key, parseInt(ri)));
+                }
             }
             return new ArrayData(key, data);
         }
         return nullptr;
     }
 
-    std::vector<Section*> Parser(std::vector<std::string> tokens)
+    std::vector<Section*> parser(std::vector<std::string> tokens)
     {
         auto sections = std::vector<Section*>();
 
@@ -602,19 +657,29 @@ namespace BPS
                     i++;
                     // verifica se há algum token ao invés de um nome
                     // um nome não pode ficar vazio
-                    if (IsToken(tokens[i]))
+                    if (isToken(tokens[i]))
+                    {
                         return std::vector<Section*>();
+                    }
                     // verifica se é string
                     else if (tokens[i][0] != SY_DQUOTE)
+                    {
                         return std::vector<Section*>();
+                    }
                     else
-                        section->setName(ParseString(tokens[i]));
+                    {
+                        section->setName(parseString(tokens[i]));
+                    }
                     i++;
                     // verifica se a tag name é fechada
-                    if (IsCToken(tokens[i]))
+                    if (isCloseToken(tokens[i]))
+                    {
                         i++;
+                    }
                     else
+                    {
                         return std::vector<Section*>();
+                    }
                 }
                 // busca os dados de uma section
                 while (tokens[i] == TK_DATA)
@@ -623,20 +688,26 @@ namespace BPS
                     std::string value;
                     i++;
                     // verifica se exise uma key
-                    if (IsToken(tokens[i]))
+                    if (isToken(tokens[i]))
+                    {
                         return std::vector<Section*>();
+                    }
                     key = tokens[i];
                     i++;
                     // varifica se existe o simbolo de atribuição
                     if (tokens[i] != std::string(1, SY_COLON))
+                    {
                         return std::vector<Section*>();
+                    }
                     i++;
                     // le o valor
-                    if (IsToken(tokens[i]))
+                    if (isToken(tokens[i]))
+                    {
                         return std::vector<Section*>();
+                    }
                     value = tokens[i];
                     i += 2;
-                    section->add(ParseData(key, value));
+                    section->add(parseData(key, value));
                 }
                 sections.push_back(section);
             }
@@ -650,10 +721,10 @@ namespace BPS
         return sections;
     }
 
-    File* Compile(std::string data)
+    File* compile(std::string data)
     {
-        auto tokens = Lexer(data);
-        auto sections = Parser(tokens);
+        auto tokens = lexer(data);
+        auto sections = parser(tokens);
         return new File(sections);
     }
 
@@ -672,7 +743,7 @@ namespace BPS
         }
         f.close();
 
-        return Compile(data);
+        return compile(data);
     }
 
     void write(File* file, std::string path)
@@ -719,7 +790,7 @@ namespace BPS
                     ArrayData* arrayData = (ArrayData*)data;
                     std::vector<Data*> arrayValue = (std::vector<Data*>)arrayData->getValue();
                     wf << SY_OPEN_BRACKETS;
-                    for (int i = 0; i < arrayValue.size(); i++)
+                    for (size_t i = 0; i < arrayValue.size(); i++)
                     {
                         Data* curData = arrayValue[i];
                         if (dynamic_cast<StringData*>(curData) != nullptr)

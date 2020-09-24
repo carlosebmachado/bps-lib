@@ -116,7 +116,7 @@ namespace BPS.Util
                 // verifica a abertura de uma nova section
                 if (tokens[i].Equals(Token.TK_SECTION))
                 {
-                    var section = new Section(Token.SY_DQUOTE + sections.Count.ToString() + Token.SY_DQUOTE);
+                    var section = new Section(sections.Count.ToString());
                     i++;
                     // verifica se a tag irá possuir um nome
                     if (tokens[i].Equals(Token.TK_NAME))
@@ -130,7 +130,7 @@ namespace BPS.Util
                         else if (!tokens[i][0].Equals(Token.SY_DQUOTE))
                             throw new Exception("Expected a string in name " + tokens[i]);
                         else
-                            section.Name = tokens[i];
+                            section.Name = ParseString(tokens[i]);
                         i++;
                         // verifica se a tag name é fechada
                         if (Token.IsCToken(tokens[i]))

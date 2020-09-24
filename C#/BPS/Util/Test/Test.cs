@@ -18,7 +18,7 @@ namespace BPS.Util.Test
             if (!DEBUG) return;
 #pragma warning restore CS0162 // Código inacessível detectado
 
-            //ReadWrite_Test();
+            ReadWrite_Test();
             //RemoveData_Test();
             //RemoveSection_Test();
             //FindSection_Test();

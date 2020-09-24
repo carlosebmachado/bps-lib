@@ -75,7 +75,7 @@ namespace BPS
                 foreach (Section section in file.AllSections())
                 {
                     wf.WriteLine(Token.TK_SECTION);
-                    wf.WriteLine(Token.FILE_TAB + Token.TK_NAME + section.Name + Token.TK_CLOSE);
+                    wf.WriteLine(Token.FILE_TAB + Token.TK_NAME + Token.SY_DQUOTE + section.Name + Token.SY_DQUOTE + Token.TK_CLOSE);
                     foreach (Data data in section.AllData())
                     {
                         wf.Write(Token.FILE_TAB + Token.TK_DATA + data.Key + Token.SY_COLON);

@@ -22,43 +22,97 @@
  * THE SOFTWARE.
  */
 
-#pragma once
+#ifndef BPS_H
+#define BPS_H
 
 #include <string>
 #include <vector>
 #include <fstream>
+#include <ctype.h>
 
-namespace BPS {
-    const auto HEADER = "# BPS File";
-    const auto EXTENSION = ".bps";
-    const auto KV_TAB = "    ";
-    const std::string KV_NL = "\n";
-    const std::string KV_VOID = "";
-    const std::string KV_LAB_STR = "<";
-    const std::string KV_RAB_STR = ">";
-    const std::string KV_SEP_STR = ":";
-    const std::string KV_CMT_STR = "#";
-    const char KV_SPC = ' ';
-    const char KV_CTAB = '\t';
-    const char KV_LAB_CHAR = '<';
-    const char KV_RAB_CHAR = '>';
-    const char KV_SEP_CHAR = ':';
-    const char KV_CMT_CHAR = '#';
+#include "util.hpp"
 
-    class Data {
+namespace BPS
+{
+    class Data
+    {
     private:
         std::string key;
-        std::string value;
     public:
-        Data(std::string, std::string);
-        ~Data();
+        Data(std::string);
+        virtual ~Data();
         std::string getKey();
         void setKey(std::string);
+    };
+
+    class StringData : public Data
+    {
+    private:
+        std::string value;
+    public:
+        StringData(std::string, std::string);
+        ~StringData();
         std::string getValue();
         void setValue(std::string);
     };
 
-    class Section {
+    class CharData : public Data
+    {
+    private:
+        char value;
+    public:
+        CharData(std::string, char);
+        ~CharData();
+        char getValue();
+        void setValue(char);
+    };
+
+    class BoolData : public Data
+    {
+    private:
+        bool value;
+    public:
+        BoolData(std::string, bool);
+        ~BoolData();
+        bool getValue();
+        void setValue(bool);
+    };
+
+    class IntData : public Data
+    {
+    private:
+        int value;
+    public:
+        IntData(std::string, int);
+        ~IntData();
+        int getValue();
+        void setValue(int);
+    };
+
+    class DoubleData : public Data
+    {
+    private:
+        double value;
+    public:
+        DoubleData(std::string, double);
+        ~DoubleData();
+        double getValue();
+        void setValue(double);
+    };
+
+    class ArrayData : public Data
+    {
+    private:
+        std::vector<Data*> value;
+    public:
+        ArrayData(std::string, std::vector<Data*>);
+        ~ArrayData();
+        std::vector<Data*> getValue();
+        void setValue(std::vector<Data*>);
+    };
+
+    class Section
+    {
     private:
         std::string name;
         std::vector<Data*> data;
@@ -76,7 +130,8 @@ namespace BPS {
         void setName(std::string);
     };
 
-    class File {
+    class File
+    {
     private:
         std::vector<Section*> sections;
     public:
@@ -91,11 +146,41 @@ namespace BPS {
         bool exists(std::string);
     };
 
-    std::vector<std::string> split(std::string, char);
-    std::string trim(std::string);
     std::string normalizePath(std::string);
     std::string removeComments(std::string);
 
     File* read(std::string);
     void write(File*, std::string);
+
+    // token
+    bool IsToken(std::string);
+    bool IsOToken(std::string);
+    bool IsCToken(std::string);
+
+    // parser
+    std::vector<std::string> Lexer(std::string);
+
+    bool IsString(std::string);
+    bool IsChar(std::string);
+    bool IsBool(std::string);
+    bool IsNumeric(std::string);
+    bool IsInt(std::string);
+    bool IsDouble(std::string);
+    bool IsArray(std::string);
+
+    std::string ParseString(std::string);
+    char ParseChar(std::string);
+    bool ParseBool(std::string);
+    int ParseInt(std::string);
+    double ParseDouble(std::string);
+    template <typename T>
+    Data* ParseData(std::string, std::string);
+
+    template <typename T>
+    std::vector<Section*> Parser(std::vector<std::string>);
+
+    template <typename T>
+    File* Compile(std::string);
 }
+
+#endif // BPS_H

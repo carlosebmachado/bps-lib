@@ -1,0 +1,28 @@
+# BPS File
+
+<section>
+    <name>"sectionName"</>
+    <data>string:"This is a string"</>
+    <data>char:'z'</>
+    <data>int:10</>
+    <data>float:0.5</>
+    <data>boolt:true</>
+    <data>boolf:false</>
+    <data>charVector:['a','b','c']</>
+    <data>boolVector:[true,false,true]</>
+    <data>intVector:[0,1,2,10,-5]</>
+    <data>floatVector:[0.9,1.7,0.2,1.06,-5.618]</>
+    <data>stringVector:["yes","no","maybe"]</>
+</>
+
+<section>
+    <name>"1"</>
+    <data>key:"value"</>
+    <data>keyTwo:"value"</>
+    <data>key_two:"value"</>
+</>
+
+<section>
+    <name>"one more"</>
+</>
+

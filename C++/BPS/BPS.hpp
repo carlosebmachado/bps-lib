@@ -83,7 +83,7 @@ namespace BPS
         TK_CLOSE
     };
 
-    // DECLARA«√O
+    // DECLARA√á√ÉO
     class Data
     {
     private:
@@ -232,7 +232,7 @@ namespace BPS
     template <typename T>
     File* compile(std::string);
 
-    // IMPLEMENTA«√O
+    // IMPLEMENTA√á√ÉO
 
     // abstract data
     Data::Data(std::string key)
@@ -811,17 +811,17 @@ namespace BPS
             {
                 auto section = new Section(std::to_string(sections.size()));
                 i++;
-                // verifica se a tag ir· possuir um nome
+                // verifica se a tag ir√° possuir um nome
                 if (tokens[i] == TK_NAME)
                 {
                     i++;
-                    // verifica se h· algum token ao invÈs de um nome
-                    // um nome n„o pode ficar vazio
+                    // verifica se h√° algum token ao inv√©s de um nome
+                    // um nome n√£o pode ficar vazio
                     if (isToken(tokens[i]))
                     {
                         return std::vector<Section*>();
                     }
-                    // verifica se È string
+                    // verifica se √© string
                     else if (tokens[i][0] != SY_DQUOTE)
                     {
                         return std::vector<Section*>();
@@ -831,7 +831,7 @@ namespace BPS
                         section->setName(parseString(tokens[i]));
                     }
                     i++;
-                    // verifica se a tag name È fechada
+                    // verifica se a tag name √© fechada
                     if (isCloseToken(tokens[i]))
                     {
                         i++;
@@ -854,7 +854,7 @@ namespace BPS
                     }
                     key = tokens[i];
                     i++;
-                    // varifica se existe o simbolo de atribuiÁ„o
+                    // varifica se existe o simbolo de atribui√ß√£o
                     if (tokens[i] != std::string(1, SY_COLON))
                     {
                         return std::vector<Section*>();
@@ -873,7 +873,7 @@ namespace BPS
             }
             else
             {
-                // caso n„o seja uma tag de section, gera um erro
+                // caso n√£o seja uma tag de section, gera um erro
                 return std::vector<Section*>();
             }
         }
@@ -883,6 +883,10 @@ namespace BPS
 
     File* compile(std::string data)
     {
+        if (data == "") {
+            return new File();
+        }
+
         auto tokens = lexer(data);
         auto sections = parser(tokens);
         return new File(sections);
@@ -896,10 +900,12 @@ namespace BPS
         std::ifstream f;
         f.open(normalizePath(path));
 
-        while (!f.eof())
-        {
-            getline(f, line);
-            data += line + "\n";
+        if (f.is_open()) {
+            while (!f.eof())
+            {
+                getline(f, line);
+                data += line + "\n";
+            }
         }
         f.close();
 

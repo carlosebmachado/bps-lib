@@ -586,7 +586,9 @@ namespace BPS
         return false;
     }
 
-    // parser
+    //---------------------------------------------------------------------------------
+    // PARSER
+    //---------------------------------------------------------------------------------
     std::vector<std::string> lexer(std::string data)
     {
         auto tokens = std::vector<std::string>();
